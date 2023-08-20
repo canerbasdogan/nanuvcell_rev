@@ -24,8 +24,9 @@ public class InvoiceMobileController {
     }
 
     @PostMapping
-    public void createInvoiceMobile(@RequestBody CreateInvoiceMobileRequest request) {
+    public ResponseEntity<String> createInvoiceMobile(@RequestBody CreateInvoiceMobileRequest request) {
         service.createInvoiceMobile(request);
+        return ResponseEntity.ok("Invoice Mobile created");
     }
 
     @GetMapping("/{id}")

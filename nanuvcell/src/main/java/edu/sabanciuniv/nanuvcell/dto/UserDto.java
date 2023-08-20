@@ -2,8 +2,6 @@ package edu.sabanciuniv.nanuvcell.dto;
 
 import edu.sabanciuniv.nanuvcell.model.*;
 
-import java.util.List;
-
 public record UserDto(Long id,
                       String name,
                       String surName,
@@ -12,10 +10,53 @@ public record UserDto(Long id,
                       String email,
                       String address,
                       Roles role,
-                      Long mobileTariffId,
-                      Long homeInternetId) {
+                      String mobileTariffName,
+                      String homeInternetName) {
 
     public static UserDto convert(User from) {
+
+        if(from.getHomeInternet()==null&&from.getMobileTariff()!=null){
+            return new UserDto(
+                    from.getId(),
+                    from.getName(),
+                    from.getSurName(),
+                    from.getGender(),
+                    from.getPhoneNumber(),
+                    from.getEmail(),
+                    from.getAddress(),
+                    from.getRole(),
+                    from.getMobileTariff().getTariffName(),
+                    null);
+        }
+
+        if(from.getHomeInternet()!=null&&from.getMobileTariff()==null){
+            return new UserDto(
+                    from.getId(),
+                    from.getName(),
+                    from.getSurName(),
+                    from.getGender(),
+                    from.getPhoneNumber(),
+                    from.getEmail(),
+                    from.getAddress(),
+                    from.getRole(),
+                    null,
+                    from.getHomeInternet().getTariffName());
+        }
+
+        if(from.getHomeInternet()==null&&from.getMobileTariff()==null){
+            return new UserDto(
+                    from.getId(),
+                    from.getName(),
+                    from.getSurName(),
+                    from.getGender(),
+                    from.getPhoneNumber(),
+                    from.getEmail(),
+                    from.getAddress(),
+                    from.getRole(),
+                    null,
+                    null);
+        }
+
         return new UserDto(
                 from.getId(),
                 from.getName(),
@@ -25,7 +66,7 @@ public record UserDto(Long id,
                 from.getEmail(),
                 from.getAddress(),
                 from.getRole(),
-                from.getMobileTariff().getId(),
-                from.getHomeInternet().getId());
+                from.getMobileTariff().getTariffName(),
+                from.getHomeInternet().getTariffName());
     }
 }

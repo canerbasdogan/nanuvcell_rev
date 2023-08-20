@@ -28,12 +28,13 @@ public abstract class Tariff {
     private String tariffName;
     private double internetQuota;
     private double tariffPrice;
-    private LocalDateTime tariffStartDate;
-    private LocalDateTime tariffEndDate;
+    //Tarifeler kişiye özel olmamalı. Her bir User için ayrı registrationDate ve packageEndDate olmalı.
+    //private LocalDateTime tariffStartDate;
+    //private LocalDateTime tariffEndDate;
     @Enumerated(EnumType.STRING)
     private Roles role;
-    @OneToMany(mappedBy = "tariff")
-    private List<Invoice> invoiceList;
+    //@OneToMany(mappedBy = "tariff")
+    //private List<Invoice> invoiceList;
 
     @Override
     public String toString() {
@@ -42,8 +43,8 @@ public abstract class Tariff {
                 ", tariffName='" + tariffName + '\'' +
                 ", internetQuota=" + internetQuota +
                 ", tariffPrice=" + tariffPrice +
-                ", tariffStartDate=" + tariffStartDate +
-                ", tariffEndDate=" + tariffEndDate +
+                /*", tariffStartDate=" + tariffStartDate +
+                ", tariffEndDate=" + tariffEndDate +*/
                 ", role=" + role +
                 '}';
     }

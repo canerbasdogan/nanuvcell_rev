@@ -15,14 +15,22 @@ public class UserController {
         this.service = service;
     }
 
-    @PostMapping
+    /*@PostMapping
     public void createUser(@RequestBody CreateUserRequest request) {
         service.createUser(request);
+    }*/
+
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody CreateUserRequest request){
+        service.createUser(request);
+        return ResponseEntity.ok("User registration done successfully");
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUserById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
+
         service.deleteUserById(id);
+        return ResponseEntity.ok("User deleted successfully");
     }
 
     @GetMapping("/{id}")
@@ -36,12 +44,28 @@ public class UserController {
     }
 
     @PostMapping("/home-internet")
-    public void registerUserToTheHomeInternet(@RequestBody RegisterTariffRequest request) {
+    public ResponseEntity<String> registerUserToTheHomeInternet(@RequestBody RegisterTariffRequest request) {
         service.registerUserToTheHomeInternet(request);
+        return ResponseEntity.ok("User registered to Home Internet successfully");
     }
 
     @PostMapping("/mobile-tariff")
-    public void registerUserToTHeMobileTariff(@RequestBody RegisterTariffRequest request) {
+    public ResponseEntity<String> registerUserToTHeMobileTariff(@RequestBody RegisterTariffRequest request) {
         service.registerUserToTHeMobileTariff(request);
+        return ResponseEntity.ok("User registered to Mobile Tariff successfully");
     }
+
+    @PostMapping("/invoice-payment")
+    public ResponseEntity<String> payAllInvoices(@RequestBody InvoicePaymentRequest request){
+        service.payAllInvoices(request);
+        return ResponseEntity.ok("Your invoices paid successfully");
+    }
+
+    /*@PostMapping("/home-internet/change-package")
+    public void registerUserToAnotherHomeInternetPackage(@RequestBody RegisterTariffRequest request) {
+        service.registerUserToAnotherHomeInternetPackage(request);
+    }*/
+
+
+
 }

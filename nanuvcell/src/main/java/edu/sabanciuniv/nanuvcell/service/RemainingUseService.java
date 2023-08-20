@@ -1,6 +1,7 @@
 package edu.sabanciuniv.nanuvcell.service;
 
 import edu.sabanciuniv.nanuvcell.dto.RemainingUseDto;
+import edu.sabanciuniv.nanuvcell.dto.RemainingUseHomeInternetDto;
 import edu.sabanciuniv.nanuvcell.exception.RemainingUseNotFoundException;
 import edu.sabanciuniv.nanuvcell.model.*;
 import edu.sabanciuniv.nanuvcell.repository.RemainingUseRepository;
@@ -13,9 +14,11 @@ import java.util.stream.Collectors;
 public class RemainingUseService {
 
     private final RemainingUseRepository repository;
+    private final RemainingUseHomeInternetService remainingUseHomeInternetService;
 
-    public RemainingUseService(RemainingUseRepository repository) {
+    public RemainingUseService(RemainingUseRepository repository, RemainingUseHomeInternetService remainingUseHomeInternetService) {
         this.repository = repository;
+        this.remainingUseHomeInternetService = remainingUseHomeInternetService;
     }
 
     public RemainingUseDto findRemainingUse(Long id) {
@@ -40,10 +43,31 @@ public class RemainingUseService {
         RemainingUse remainingUse = RemainingUse.builder()
                 .remainingMessage(mobileTariff.getMessageQuota())
                 .remainingSpeaking(mobileTariff.getSpeakingQuota())
+                .remainingInternet(mobileTariff.getInternetQuota())
                 .user(user)
                 .mobileTariff(mobileTariff)
                 .build();
 
         repository.save(remainingUse);
+    }
+
+    protected void createRemainingUseHomeInternet(User user, HomeInternet homeInternet) {
+        /*RemainingUseHomeInternet remainingUseHomeInternet = RemainingUseHomeInternet.builder()
+                .remainingInternet(homeInternet.getInternetQuota())
+                .user(user)
+                .homeInternet(homeInternet)
+                .build();*/
+
+        remainingUseHomeInternetService.createRemainingUseHomeInternet(user,homeInternet);
+    }
+
+    public RemainingUseHomeInternetDto findRemainingUseHomeInternet(Long id) {
+
+        return remainingUseHomeInternetService.findRemainingUseHomeInternet(id);
+    }
+
+    public void deleteRemainingUseHomeInternetByUserId(Long id) {
+
+        remainingUseHomeInternetService.deleteRemainingUseHomeInternetById(id);
     }
 }

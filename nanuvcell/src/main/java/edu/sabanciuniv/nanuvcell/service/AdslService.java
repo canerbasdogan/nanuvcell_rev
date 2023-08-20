@@ -4,10 +4,9 @@ import edu.sabanciuniv.nanuvcell.dto.AdslDto;
 import edu.sabanciuniv.nanuvcell.dto.CreateAdslRequest;
 import edu.sabanciuniv.nanuvcell.exception.AdslNotFoundException;
 import edu.sabanciuniv.nanuvcell.model.Adsl;
-import edu.sabanciuniv.nanuvcell.repository.AdslRepostiroy;
+import edu.sabanciuniv.nanuvcell.repository.AdslRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,10 +14,10 @@ import java.util.stream.Collectors;
 @Service
 public class AdslService {
 
-    private final AdslRepostiroy repostiroy;
+    private final AdslRepository repository;
 
-    public AdslService(AdslRepostiroy repostiroy) {
-        this.repostiroy = repostiroy;
+    public AdslService(AdslRepository repository) {
+        this.repository = repository;
     }
 
     public void createAdsl(CreateAdslRequest request) {
@@ -29,8 +28,8 @@ public class AdslService {
         Adsl adsl = Adsl.builder()
                 .tariffName(request.tariffName())
                 .internetSpeed(request.internetSpeed())
-                .tariffStartDate(LocalDateTime.parse(request.tariffStartDate(), formatter))
-                .tariffEndDate(LocalDateTime.parse(request.tariffEndDate(), formatter))
+                //.tariffStartDate(LocalDateTime.parse(request.tariffStartDate(), formatter))
+                //.tariffEndDate(LocalDateTime.parse(request.tariffEndDate(), formatter))
                 .role(request.role())
                 .internetQuota(request.internetQuota())
                 .uploadSpeed(request.uploadSpeed())
@@ -38,18 +37,18 @@ public class AdslService {
                 .tariffPrice(request.tariffPrice())
                 .build();
 
-        repostiroy.save(adsl);
+        repository.save(adsl);
     }
 
     public List<AdslDto> findAllAdsl() {
-        return repostiroy.findAll()
+        return repository.findAll()
                 .stream()
                 .map(AdslDto::convert)
                 .collect(Collectors.toList());
     }
 
     protected Adsl findAdslById(Long id) {
-        return repostiroy.findById(id)
+        return repository.findById(id)
                 .orElseThrow(
                         () -> new AdslNotFoundException("Adsl not found by id : " + id));
     }

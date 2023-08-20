@@ -9,8 +9,8 @@ public record InvoiceDto(Long id,
                          String surName,
                          String email,
                          String tariffName,
-                         LocalDateTime tariffStartDate,
-                         LocalDateTime tariffEndDate,
+                         //LocalDateTime tariffStartDate,
+                         //LocalDateTime tariffEndDate,
                          double tariffPrice) {
 
     public static InvoiceDto convert(Invoice from) {
@@ -20,8 +20,8 @@ public record InvoiceDto(Long id,
                 from.getUser().getSurName(),
                 from.getUser().getEmail(),
                 from.getTariff().getTariffName(),
-                from.getTariff().getTariffStartDate(),
-                from.getTariff().getTariffEndDate(),
+                //from.getTariff().getTariffStartDate(),
+                //from.getTariff().getTariffEndDate(),
                 from.getTariff().getTariffPrice());
     }
 }

@@ -9,29 +9,26 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RemainingUse {
+public class RemainingUseHomeInternet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int remainingMessage;
-    private int remainingSpeaking;
     private double remainingInternet;
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne
-    @JoinColumn(name = "mobile_tariff_id")
-    private MobileTariff mobileTariff;
+    @JoinColumn(name = "home_internet_id")
+    private HomeInternet homeInternet;
 
     @Override
     public String toString() {
         return "RemainingUse{" +
                 "id=" + id +
-                ", remainingMessage=" + remainingMessage +
-                ", remainingSpeaking=" + remainingSpeaking +
+                ", remainingInternet=" + remainingInternet +
                 ", user=" + user +
-                ", mobileTariff=" + mobileTariff +
+                ", homeInternet=" + homeInternet +
                 '}';
     }
 }

@@ -23,9 +23,10 @@ public class InvoiceController {
         return ResponseEntity.ok(service.getInvoicesByUserId(id));
     }
 
-    @PostMapping
+    //Bu metod bir işe yaramıyor?
+    /*@PostMapping
     public ResponseEntity<String> createInvoice(@RequestBody CreateInvoiceRequest request) {
         service.createInvoice(request);
         return ResponseEntity.ok("Invoice created successfully!");
-    }
+    }*/
 }

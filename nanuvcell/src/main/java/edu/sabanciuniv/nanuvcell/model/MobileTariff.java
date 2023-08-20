@@ -30,8 +30,8 @@ public abstract class MobileTariff extends Tariff {
                 "tariffName=" + this.getTariffName() +
                 ", internetQuota=" + this.getInternetQuota() +
                 ", tariffPrice=" + this.getTariffPrice() +
-                ", tariffStartDate=" + this.getTariffStartDate() +
-                ", tariffEndDate=" + this.getTariffEndDate() +
+                /*", tariffStartDate=" + this.getTariffStartDate() +
+                ", tariffEndDate=" + this.getTariffEndDate() +*/
                 ", speakingQuota=" + speakingQuota +
                 ", messageQuota=" + messageQuota +
                 '}';

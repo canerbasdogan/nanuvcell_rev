@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 public record CreateFiberRequest(String tariffName,
                                  double internetQuota,
                                  double tariffPrice,
-                                 String tariffStartDate,
-                                 String tariffEndDate,
+                                 //String tariffStartDate,
+                                 //String tariffEndDate,
                                  Roles role,
                                  int internetSpeed,
                                  boolean fiberInfrastructure) {

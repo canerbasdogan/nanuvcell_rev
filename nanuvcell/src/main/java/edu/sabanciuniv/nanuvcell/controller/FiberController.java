@@ -24,8 +24,9 @@ public class FiberController {
     }
 
     @PostMapping
-    public void createFiber(@RequestBody CreateFiberRequest request) {
+    public ResponseEntity<String> createFiber(@RequestBody CreateFiberRequest request) {
         service.createFiber(request);
+        return ResponseEntity.ok("Fiber created");
     }
 
     @GetMapping("/{id}")

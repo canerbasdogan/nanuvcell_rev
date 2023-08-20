@@ -19,6 +19,8 @@ import java.util.List;
 public abstract class HomeInternet extends Tariff {
 
     private int internetSpeed;
+    @OneToMany(mappedBy = "homeInternet")
+    private List<RemainingUseHomeInternet> remainingUseHomeInternetList;
     @OneToMany(mappedBy = "homeInternet", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     private List<User> userList;
 }

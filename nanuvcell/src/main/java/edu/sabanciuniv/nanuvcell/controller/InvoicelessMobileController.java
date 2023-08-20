@@ -24,8 +24,9 @@ public class InvoicelessMobileController {
     }
 
     @PostMapping
-    public void createInvoicelessMobile(@RequestBody CreateInvoicelessMobileRequest request) {
+    public ResponseEntity<String> createInvoicelessMobile(@RequestBody CreateInvoicelessMobileRequest request) {
         service.createInvoicelessMobile(request);
+        return ResponseEntity.ok("Invoiceless Mobile created");
     }
 
     @GetMapping("/{id}")

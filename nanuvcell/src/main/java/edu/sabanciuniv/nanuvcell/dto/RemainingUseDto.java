@@ -7,8 +7,9 @@ import java.time.LocalDateTime;
 public record RemainingUseDto(Long id,
                               int remainingMessage,
                               int remainingSpeaking,
-                              int remainingInternet,
+                              double remainingInternet,
                               String tariffName,
+                              LocalDateTime tariffStartDate,
                               LocalDateTime tariffEndDate,
                               double tariffPrice) {
 
@@ -19,7 +20,8 @@ public record RemainingUseDto(Long id,
                 from.getRemainingSpeaking(),
                 from.getRemainingInternet(),
                 from.getMobileTariff().getTariffName(),
-                from.getMobileTariff().getTariffEndDate(),
+                from.getUser().getMobileTariffStartDate(),
+                from.getUser().getMobileTariffEndDate(),
                 from.getMobileTariff().getTariffPrice());
     }
 }

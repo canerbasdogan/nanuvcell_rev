@@ -9,5 +9,9 @@ public record CreateUserRequest(String name,
                                 String email,
                                 String address,
                                 String password,
-                                Roles role) {
+                                Roles role,
+                                Long creditCardNumber,
+                                Long creditCardCVV,
+                                String creditCardPassword/*,
+                                Double creditCardLimit*/) {
 }

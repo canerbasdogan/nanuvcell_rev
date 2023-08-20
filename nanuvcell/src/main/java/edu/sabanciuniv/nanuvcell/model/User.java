@@ -3,6 +3,7 @@ package edu.sabanciuniv.nanuvcell.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,16 +25,26 @@ public class User {
     private String email;
     private String address;
     private String password;
+    private Long creditCardNumber;
+    private Long creditCardCVV;
+    private String creditCardPassword;
+    private Double creditCardLimit;
     @Enumerated(EnumType.STRING)
     private Roles role;
     @ManyToOne
     @JoinColumn(name = "mobile_tariff_id")
     private MobileTariff mobileTariff;
+    private LocalDateTime mobileTariffStartDate;
+    private LocalDateTime mobileTariffEndDate;
     @ManyToOne
     @JoinColumn(name = "home_internet_id")
     private HomeInternet homeInternet;
+    private LocalDateTime homeInternetTariffStartDate;
+    private LocalDateTime homeInternetTariffEndDate;
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private RemainingUse remainingUse;
+    @OneToOne(mappedBy = "user",cascade = CascadeType.REMOVE)
+    private RemainingUseHomeInternet remainingUseHomeInternet;
     @OneToMany(mappedBy = "user")
     private List<Invoice> invoiceList;
 

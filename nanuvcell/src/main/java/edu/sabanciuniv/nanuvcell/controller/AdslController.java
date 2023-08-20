@@ -24,8 +24,9 @@ public class AdslController {
     }
 
     @PostMapping
-    public void createAdsl(@RequestBody CreateAdslRequest request) {
+    public ResponseEntity<String> createAdsl(@RequestBody CreateAdslRequest request) {
         service.createAdsl(request);
+        return ResponseEntity.ok("ADSL created");
     }
 
     @GetMapping("/{id}")

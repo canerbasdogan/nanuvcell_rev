@@ -1,6 +1,7 @@
 package edu.sabanciuniv.nanuvcell.controller;
 
 import edu.sabanciuniv.nanuvcell.dto.RemainingUseDto;
+import edu.sabanciuniv.nanuvcell.dto.RemainingUseHomeInternetDto;
 import edu.sabanciuniv.nanuvcell.service.RemainingUseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,4 +28,10 @@ public class RemainingUseController {
     public ResponseEntity<RemainingUseDto> findRemainingUseByUserId(@PathVariable Long id) {
         return ResponseEntity.ok(service.findRemainingUseById(id));
     }
+
+    @GetMapping("/home-internet/user/{id}")
+    public ResponseEntity<RemainingUseHomeInternetDto> findRemainingUseHomeInternetByUserId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findRemainingUseHomeInternet(id));
+    }
+
 }

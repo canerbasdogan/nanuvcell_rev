@@ -17,7 +17,9 @@ public class Invoice {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
-    @JoinColumn(name = "tariff_id")
+    //@ManyToOne
+    //@JoinColumn(name = "tariff_id")
+    @OneToOne
     private Tariff tariff;
+    private Double invoiceAmount;
 }
