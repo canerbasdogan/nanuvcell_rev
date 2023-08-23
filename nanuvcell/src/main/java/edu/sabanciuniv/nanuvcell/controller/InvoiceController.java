@@ -20,7 +20,7 @@ public class InvoiceController {
 
     @GetMapping("/user/{id}")
     public ResponseEntity<List<InvoiceDto>> findInvoiceById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getInvoicesByUserId(id));
+        return ResponseEntity.ok(service.getInvoicesDtosByUserId(id));
     }
 
     //Bu metod bir işe yaramıyor?

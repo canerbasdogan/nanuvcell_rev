@@ -1,5 +1,6 @@
 package edu.sabanciuniv.nanuvcell.controller;
 
+import edu.sabanciuniv.nanuvcell.dto.CreateAdslRequest;
 import edu.sabanciuniv.nanuvcell.dto.CreateFiberRequest;
 import edu.sabanciuniv.nanuvcell.dto.FiberDto;
 import edu.sabanciuniv.nanuvcell.service.FiberService;
@@ -27,6 +28,12 @@ public class FiberController {
     public ResponseEntity<String> createFiber(@RequestBody CreateFiberRequest request) {
         service.createFiber(request);
         return ResponseEntity.ok("Fiber created");
+    }
+
+    @PostMapping("/fiber-list")
+    public ResponseEntity<String> createFiberList(@RequestBody List<CreateFiberRequest> requestList) {
+        service.createFiberList(requestList);
+        return ResponseEntity.ok("Fiber List created");
     }
 
     @GetMapping("/{id}")

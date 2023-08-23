@@ -66,6 +66,14 @@ public class RemainingUseService {
         return remainingUseHomeInternetService.findRemainingUseHomeInternet(id);
     }
 
+    public void deleteRemainingUseByUserId(Long id) {
+
+        RemainingUse remainingUse = repository.findRemainingUseByUserId(id)
+                .orElseThrow(
+                        () -> new RemainingUseNotFoundException("User dont have any remaining use"));
+        repository.deleteById(remainingUse.getId());
+    }
+
     public void deleteRemainingUseHomeInternetByUserId(Long id) {
 
         remainingUseHomeInternetService.deleteRemainingUseHomeInternetById(id);

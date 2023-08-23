@@ -10,6 +10,7 @@ import edu.sabanciuniv.nanuvcell.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -78,16 +79,6 @@ public class UserService {
         return false;
     }
 
-    /*private boolean customerAlreadyExist(String email) {
-        Optional<User> user = repository.findByEmail(email);
-
-        if (user.isPresent()) {
-            return true;
-        }
-
-        return false;
-    }*/
-
     public void registerUserToTheHomeInternet(RegisterTariffRequest request) {
         HomeInternet homeInternet = homeInternetService.findHomeInternetById(request);
 
@@ -106,10 +97,6 @@ public class UserService {
                 user.getCreditCardPassword().equals(request.creditCardPassword()))){
             if((user.getCreditCardLimit())>=homeInternet.getTariffPrice()){
                 user.setCreditCardLimit(user.getCreditCardLimit()- homeInternet.getTariffPrice());
-                /*LocalDateTime registrationDate = LocalDateTime.now();
-                LocalDateTime tariffEndDate = registrationDate.plusYears(1);
-                homeInternet.setTariffStartDate(registrationDate);
-                homeInternet.setTariffEndDate(tariffEndDate);*/
                 LocalDateTime registrationDate = LocalDateTime.now();
                 LocalDateTime tariffEndDate = registrationDate.plusYears(1);
                 user.setHomeInternetTariffStartDate(registrationDate);
@@ -155,10 +142,6 @@ public class UserService {
                 user.getCreditCardPassword().equals(request.creditCardPassword()))){
             if((user.getCreditCardLimit())>=mobileTariff.getTariffPrice()){
                 user.setCreditCardLimit(user.getCreditCardLimit()- mobileTariff.getTariffPrice());
-                /*LocalDateTime registrationDate = LocalDateTime.now();
-                LocalDateTime tariffEndDate = registrationDate.plusYears(1);
-                mobileTariff.setTariffStartDate(registrationDate);
-                mobileTariff.setTariffEndDate(tariffEndDate);*/
                 LocalDateTime registrationDate = LocalDateTime.now();
                 LocalDateTime tariffEndDate = registrationDate.plusYears(1);
                 user.setMobileTariffStartDate(registrationDate);
@@ -206,8 +189,7 @@ public class UserService {
 
         if(request.name()==null||request.surName()==null||request.gender()==null||request.phoneNumber()==null||
                 request.address()==null||request.email()==null||request.password()==null||
-                request.creditCardNumber()==null||request.creditCardCVV()==null||request.creditCardPassword()==null/*||
-                request.creditCardLimit()==null*/){
+                request.creditCardNumber()==null||request.creditCardCVV()==null||request.creditCardPassword()==null){
             throw new AuthenticationException("Any of the fields cannot be left blank");
         }
 
@@ -228,7 +210,6 @@ public class UserService {
                     .creditCardNumber(request.creditCardNumber())
                     .creditCardCVV(request.creditCardCVV())
                     .creditCardPassword(request.creditCardPassword())
-                    //.creditCardLimit(request.creditCardLimit())
                     .creditCardLimit(CreditCardLimitGenerator.generateRandomLimit())
                     .build();
 
@@ -248,7 +229,6 @@ public class UserService {
                     .creditCardNumber(request.creditCardNumber())
                     .creditCardCVV(request.creditCardCVV())
                     .creditCardPassword(request.creditCardPassword())
-                    //.creditCardLimit(request.creditCardLimit())
                     .creditCardLimit(CreditCardLimitGenerator.generateRandomLimit())
                     .build();
 
@@ -259,32 +239,7 @@ public class UserService {
             throw new AuthenticationException("Email already in use!!!");
         }
 
-        /*else if (emailInUse(request.email())){
-            User user = User.builder()
-                    .name(request.name())
-                    .surName(request.surName())
-                    .gender(request.gender())
-                    .phoneNumber(request.phoneNumber())
-                    .address(request.address())
-                    .email(request.email())
-                    .password(request.password())
-                    .role(Roles.CUSTOMER)
-                    .creditCardNumber(request.creditCardNumber())
-                    .creditCardCVV(request.creditCardCVV())
-                    .creditCardPassword(request.creditCardPassword())
-                    .creditCardLimit(request.creditCardLimit())
-                    .build();
-
-            repository.save(user);
-
-        }*/
-
     }
-
-    /*public void deletePostPaidMobileTariffInvoiceByUserId(Long id){
-        User user = findUserByGivenId(id);
-        Invoice invoice = invoiceService.
-    }*/
 
     public void deleteUserById(Long id) {
 
@@ -304,6 +259,14 @@ public class UserService {
 
     public void payAllInvoices(InvoicePaymentRequest request){
         User user = findUserByGivenId(request.userId());
+
+        List<InvoiceDto> invoiceDtoList = invoiceService.getInvoicesDtosByUserId(user.getId());
+
+        long count = invoiceDtoList.stream().filter(invoiceDto -> invoiceDto.invoicePaymentDate().isAfter(LocalDateTime.now())).count();
+
+        if(count==2){
+            throw new AuthenticationException("You don't have any invoices to pay! Please wait your Invoice Payment Date!");
+        }
         Double invoiceTotalAmount = invoiceService.getTotalInvoicesAmountByUser(user);
 
         if(invoiceTotalAmount==0){
@@ -324,36 +287,40 @@ public class UserService {
             throw new AuthenticationException("Credit card information incorrect");
         }
 
-        invoiceService.deleteInvoicesByUserId(user);
-
         repository.save(user);
 
     }
 
-    /*public void registerUserToAnotherHomeInternetPackage(RegisterTariffRequest request) {
-        HomeInternet homeInternet = homeInternetService.findHomeInternetById(request);
-
+    public void payMobileInvoice(InvoicePaymentRequest request){
         User user = findUserByGivenId(request.userId());
 
-        if (user.getHomeInternet() == null) {
-            throw new HomeInternetNotFoundException("User doesn't have any home internet package !!!");
+        List<Invoice> invoiceList = invoiceService.getInvoicesByUserId(user.getId());
+
+        Invoice mobileTariffInvoice = null;
+
+        for(Invoice invoice:invoiceList){
+            if(invoice.getTariff() instanceof MobileTariff){
+                mobileTariffInvoice = invoice;
+            }
         }
 
-        if(user.getHomeInternet().getId() == request.tariffId()){
-            throw new HomeInternetNotFoundException("user already subscribed to this package !!!");
+        Tariff tariffToCreateNewInvoice = mobileTariffInvoice.getTariff();
+
+        if(mobileTariffInvoice.getInvoiceAmountPaymentDate().isAfter(LocalDateTime.now())){
+            throw new AuthenticationException("You don't have any mobile invoices to pay! Please wait your Invoice Payment Date!");
+        }
+
+        Double mobileTariffInvoiceAmount = mobileTariffInvoice.getInvoiceAmount();
+
+        if(mobileTariffInvoiceAmount==0){
+            throw new AuthenticationException("You don't have any invoices to pay!");
         }
 
         if((user.getCreditCardNumber().equals(request.creditCardNumber()) &&
                 user.getCreditCardCVV().equals(request.creditCardCVV()) &&
                 user.getCreditCardPassword().equals(request.creditCardPassword()))){
-            if((user.getCreditCardLimit())>=homeInternet.getTariffPrice()){
-                user.setCreditCardLimit(user.getCreditCardLimit()- homeInternet.getTariffPrice());
-                LocalDateTime registrationDate = LocalDateTime.now();
-                LocalDateTime tariffEndDate = registrationDate.plusYears(1);
-                remainingUseService.
-                user.setHomeInternetTariffStartDate(registrationDate);
-                user.setHomeInternetTariffEndDate(tariffEndDate);
-                user.setHomeInternet(homeInternet);
+            if((user.getCreditCardLimit())>=mobileTariffInvoiceAmount){
+                user.setCreditCardLimit(user.getCreditCardLimit()- mobileTariffInvoiceAmount);
 
             }else{
                 throw new AuthenticationException("Credit card balance insufficient");
@@ -363,13 +330,59 @@ public class UserService {
             throw new AuthenticationException("Credit card information incorrect");
         }
 
+        invoiceService.deleteMobileInvoicesByUserId(user);
+        invoiceService.createAnotherPostPaidMobileTariffInvoice(user, (MobileTariff) tariffToCreateNewInvoice);
+        remainingUseService.deleteRemainingUseByUserId(user.getId());
+        remainingUseService.createRemainingUse(user,(MobileTariff) tariffToCreateNewInvoice);
         repository.save(user);
 
-        remainingUseService.createRemainingUseHomeInternet(user,homeInternet);
+    }
 
-        invoiceService.createHomeInternetTariffInvoice(user,homeInternet);
+    public void payHomeInternetInvoice(InvoicePaymentRequest request){
+        User user = findUserByGivenId(request.userId());
 
-    }*/
+        List<Invoice> invoiceList = invoiceService.getInvoicesByUserId(user.getId());
 
+        Invoice homeInternetInvoice = null;
+
+        for(Invoice invoice:invoiceList){
+            if(invoice.getTariff() instanceof HomeInternet){
+                homeInternetInvoice = invoice;
+            }
+        }
+
+        Tariff tariffToCreateNewInvoice = homeInternetInvoice.getTariff();
+
+        if(homeInternetInvoice.getInvoiceAmountPaymentDate().isAfter(LocalDateTime.now())){
+            throw new AuthenticationException("You don't have any mobile invoices to pay! Please wait your Invoice Payment Date!");
+        }
+
+        Double homeInternetInvoiceAmount = homeInternetInvoice.getInvoiceAmount();
+
+        if(homeInternetInvoiceAmount==0){
+            throw new AuthenticationException("You don't have any invoices to pay!");
+        }
+
+        if((user.getCreditCardNumber().equals(request.creditCardNumber()) &&
+                user.getCreditCardCVV().equals(request.creditCardCVV()) &&
+                user.getCreditCardPassword().equals(request.creditCardPassword()))){
+            if((user.getCreditCardLimit())>=homeInternetInvoiceAmount){
+                user.setCreditCardLimit(user.getCreditCardLimit()- homeInternetInvoiceAmount);
+
+            }else{
+                throw new AuthenticationException("Credit card balance insufficient");
+            }
+
+        }else {
+            throw new AuthenticationException("Credit card information incorrect");
+        }
+
+        invoiceService.deleteHomeInternetInvoiceByUserId(user);
+        invoiceService.createAnotherHomeInternetTariffInvoice(user, (HomeInternet) tariffToCreateNewInvoice);
+        remainingUseService.deleteRemainingUseHomeInternetByUserId(user.getId());
+        remainingUseService.createRemainingUseHomeInternet(user,(HomeInternet) tariffToCreateNewInvoice);
+        repository.save(user);
+
+    }
 
 }

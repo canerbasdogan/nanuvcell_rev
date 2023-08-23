@@ -5,9 +5,13 @@ import edu.sabanciuniv.nanuvcell.dto.InvoiceDto;
 import edu.sabanciuniv.nanuvcell.dto.UserDto;
 import edu.sabanciuniv.nanuvcell.model.*;
 import edu.sabanciuniv.nanuvcell.repository.InvoiceRepository;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +29,7 @@ public class InvoiceService {
         this.tariffService = tariffService;
     }
 
-    public List<InvoiceDto> getInvoicesByUserId(Long id) {
+    public List<InvoiceDto> getInvoicesDtosByUserId(Long id) {
         return repository.findAll()
                 .stream()
                 .filter(i -> {
@@ -38,17 +42,17 @@ public class InvoiceService {
                 .collect(Collectors.toList());
     }
 
-    /*public void createInvoice(CreateInvoiceRequest request) {
-        User user = userService.findUserByGivenId(request.userId());
-        Tariff tariff = tariffService.findTariffById(request.tariffId());
-
-        Invoice invoice = Invoice.builder()
-                .tariff(tariff)
-                .user(user)
-                .build();
-
-        repository.save(invoice);
-    }*/
+    public List<Invoice> getInvoicesByUserId(Long id) {
+        return repository.findAll()
+                .stream()
+                .filter(i -> {
+                    if (i.getUser().getId() == id) {
+                        return true;
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
+    }
 
     protected void createPostPaidMobileTariffInvoice(User user, MobileTariff mobileTariff){
 
@@ -56,16 +60,51 @@ public class InvoiceService {
                 .user(user)
                 .tariff(mobileTariff)
                 .invoiceAmount(mobileTariff.getTariffPrice())
+                .invoiceAmountPaymentDate(user.getMobileTariffStartDate().plusMonths(1))
+                .invoiceAmountPaymentLastDate(user.getMobileTariffStartDate().plusMonths(1).plusDays(7))
+                .build();
+
+        repository.save(postPaidTariffInvoice);
+    }
+
+    protected void createAnotherPostPaidMobileTariffInvoice(User user, MobileTariff mobileTariff){
+
+        long numberOfInvoice = ChronoUnit.MONTHS.between(user.getMobileTariffStartDate(),LocalDateTime.now());
+
+        Invoice postPaidTariffInvoice = Invoice.builder()
+                .user(user)
+                .tariff(mobileTariff)
+                .invoiceAmount(mobileTariff.getTariffPrice())
+                .invoiceAmountPaymentDate(user.getMobileTariffStartDate().plusMonths(numberOfInvoice))
+                .invoiceAmountPaymentLastDate(user.getMobileTariffStartDate().plusMonths(numberOfInvoice).plusDays(7))
                 .build();
 
         repository.save(postPaidTariffInvoice);
     }
 
     protected void createHomeInternetTariffInvoice(User user, HomeInternet homeInternet){
+
         Invoice homeInternetTariffInvoice = Invoice.builder()
                 .user(user)
                 .tariff(homeInternet)
                 .invoiceAmount(homeInternet.getTariffPrice())
+                .invoiceAmountPaymentDate(user.getHomeInternetTariffStartDate().plusMonths(1))
+                .invoiceAmountPaymentLastDate(user.getHomeInternetTariffStartDate().plusMonths(1).plusDays(7))
+                .build();
+
+        repository.save(homeInternetTariffInvoice);
+    }
+
+    protected void createAnotherHomeInternetTariffInvoice(User user, HomeInternet homeInternet){
+
+        long numberOfInvoice = ChronoUnit.MONTHS.between(user.getHomeInternetTariffStartDate(),LocalDateTime.now());
+
+        Invoice homeInternetTariffInvoice = Invoice.builder()
+                .user(user)
+                .tariff(homeInternet)
+                .invoiceAmount(homeInternet.getTariffPrice())
+                .invoiceAmountPaymentDate(user.getHomeInternetTariffStartDate().plusMonths(numberOfInvoice))
+                .invoiceAmountPaymentLastDate(user.getHomeInternetTariffStartDate().plusMonths(numberOfInvoice).plusDays(7))
                 .build();
 
         repository.save(homeInternetTariffInvoice);
@@ -82,10 +121,47 @@ public class InvoiceService {
         return invoiceTotalamount;
 
     }
-    @Transactional
+
+
+    /*@Transactional
     protected void deleteInvoicesByUserId(User user) {
 
         user.getInvoiceList().stream().forEach(invoice->repository.deleteByInvoiceId(invoice.getId()));
+
+    }*/
+
+    @Transactional
+    protected void deleteMobileInvoicesByUserId(User user) {
+
+        List<Invoice> invoiceList = user.getInvoiceList();
+
+        Invoice mobileTariffInvoice = null;
+
+        for(Invoice invoice:invoiceList){
+            if(invoice.getTariff() instanceof MobileTariff){
+                mobileTariffInvoice = invoice;
+            }
+        }
+
+        repository.deleteMobileInvoiceByInvoiceId(mobileTariffInvoice.getId());
+
+
+    }
+
+    @Transactional
+    protected void deleteHomeInternetInvoiceByUserId(User user) {
+
+        List<Invoice> invoiceList = user.getInvoiceList();
+
+        Invoice homeInternetInvoice = null;
+
+        for(Invoice invoice:invoiceList){
+            if(invoice.getTariff() instanceof HomeInternet){
+                homeInternetInvoice = invoice;
+            }
+        }
+
+        repository.deleteHomeInternetInvoiceByInvoiceId(homeInternetInvoice.getId());
 
     }
 

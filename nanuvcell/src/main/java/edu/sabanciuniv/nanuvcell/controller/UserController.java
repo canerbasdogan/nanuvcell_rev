@@ -15,11 +15,6 @@ public class UserController {
         this.service = service;
     }
 
-    /*@PostMapping
-    public void createUser(@RequestBody CreateUserRequest request) {
-        service.createUser(request);
-    }*/
-
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody CreateUserRequest request){
         service.createUser(request);
@@ -59,6 +54,18 @@ public class UserController {
     public ResponseEntity<String> payAllInvoices(@RequestBody InvoicePaymentRequest request){
         service.payAllInvoices(request);
         return ResponseEntity.ok("Your invoices paid successfully");
+    }
+
+    @PostMapping("/invoice-payment/mobile-invoice")
+    public ResponseEntity<String> payMobileInvoice(@RequestBody InvoicePaymentRequest request){
+        service.payMobileInvoice(request);
+        return ResponseEntity.ok("Your mobile invoice paid successfully");
+    }
+
+    @PostMapping("/invoice-payment/home-internet-invoice")
+    public ResponseEntity<String> payHomeInternetInvoice(@RequestBody InvoicePaymentRequest request){
+        service.payHomeInternetInvoice(request);
+        return ResponseEntity.ok("Your home internet invoice paid successfully");
     }
 
     /*@PostMapping("/home-internet/change-package")

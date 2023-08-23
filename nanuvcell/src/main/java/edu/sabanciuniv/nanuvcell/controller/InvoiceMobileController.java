@@ -1,6 +1,7 @@
 package edu.sabanciuniv.nanuvcell.controller;
 
 import edu.sabanciuniv.nanuvcell.dto.CreateInvoiceMobileRequest;
+import edu.sabanciuniv.nanuvcell.dto.CreateInvoicelessMobileRequest;
 import edu.sabanciuniv.nanuvcell.dto.InvoiceMobileDto;
 import edu.sabanciuniv.nanuvcell.service.InvoiceMobileService;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,12 @@ public class InvoiceMobileController {
     public ResponseEntity<String> createInvoiceMobile(@RequestBody CreateInvoiceMobileRequest request) {
         service.createInvoiceMobile(request);
         return ResponseEntity.ok("Invoice Mobile created");
+    }
+
+    @PostMapping("/invoice-mobiles-list")
+    public ResponseEntity<String> createInvoiceMobileList(@RequestBody List<CreateInvoiceMobileRequest> requestList) {
+        service.createInvoiceMobileList(requestList);
+        return ResponseEntity.ok("Invoice Mobile List created");
     }
 
     @GetMapping("/{id}")

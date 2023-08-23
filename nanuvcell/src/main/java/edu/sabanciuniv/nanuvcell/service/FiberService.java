@@ -1,8 +1,10 @@
 package edu.sabanciuniv.nanuvcell.service;
 
+import edu.sabanciuniv.nanuvcell.dto.CreateAdslRequest;
 import edu.sabanciuniv.nanuvcell.dto.CreateFiberRequest;
 import edu.sabanciuniv.nanuvcell.dto.FiberDto;
 import edu.sabanciuniv.nanuvcell.exception.FiberNotFoundException;
+import edu.sabanciuniv.nanuvcell.model.Adsl;
 import edu.sabanciuniv.nanuvcell.model.Fiber;
 import edu.sabanciuniv.nanuvcell.repository.FiberRepository;
 import org.springframework.stereotype.Service;
@@ -32,14 +34,29 @@ public class FiberService {
                 .tariffName(request.tariffName())
                 .internetQuota(request.internetQuota())
                 .tariffPrice(request.tariffPrice())
-                //.tariffStartDate(LocalDateTime.parse(request.tariffStartDate(), formatter))
-                //.tariffEndDate(LocalDateTime.parse(request.tariffEndDate(), formatter))
                 .role(request.role())
                 .internetSpeed(request.internetSpeed())
                 .fiberInfrastructure(request.fiberInfrastructure())
                 .build();
 
         repository.save(fiber);
+    }
+
+    public void createFiberList(List<CreateFiberRequest> requestList) {
+
+        for (CreateFiberRequest request:requestList){
+            Fiber fiber = Fiber.builder()
+                    .tariffName(request.tariffName())
+                    .internetQuota(request.internetQuota())
+                    .tariffPrice(request.tariffPrice())
+                    .role(request.role())
+                    .internetSpeed(request.internetSpeed())
+                    .fiberInfrastructure(request.fiberInfrastructure())
+                    .build();
+
+            repository.save(fiber);
+        }
+
     }
 
     public List<FiberDto> findAllFiber() {

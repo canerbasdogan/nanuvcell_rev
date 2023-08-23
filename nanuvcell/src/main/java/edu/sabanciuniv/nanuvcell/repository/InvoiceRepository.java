@@ -6,7 +6,16 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
+    /*@Modifying
+    @Query("DELETE FROM Invoice i WHERE i.id = :id")
+    void deleteByInvoiceId(Long id);*/
+
     @Modifying
     @Query("DELETE FROM Invoice i WHERE i.id = :id")
-    void deleteByInvoiceId(Long id);
+    void deleteMobileInvoiceByInvoiceId(Long id);
+
+
+    @Modifying
+    @Query("DELETE FROM Invoice i WHERE i.id = :id")
+    void deleteHomeInternetInvoiceByInvoiceId(Long id);
 }

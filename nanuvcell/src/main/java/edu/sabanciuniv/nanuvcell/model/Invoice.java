@@ -3,6 +3,8 @@ package edu.sabanciuniv.nanuvcell.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -22,4 +24,6 @@ public class Invoice {
     @OneToOne
     private Tariff tariff;
     private Double invoiceAmount;
+    private LocalDateTime invoiceAmountPaymentDate;
+    private LocalDateTime invoiceAmountPaymentLastDate;
 }

@@ -1,8 +1,10 @@
 package edu.sabanciuniv.nanuvcell.service;
 
+import edu.sabanciuniv.nanuvcell.dto.CreateFiberRequest;
 import edu.sabanciuniv.nanuvcell.dto.CreateInvoicelessMobileRequest;
 import edu.sabanciuniv.nanuvcell.dto.InvoicelessMobileDto;
 import edu.sabanciuniv.nanuvcell.exception.InvoicelessMobileNotFoundException;
+import edu.sabanciuniv.nanuvcell.model.Fiber;
 import edu.sabanciuniv.nanuvcell.model.InvoicelessMobile;
 import edu.sabanciuniv.nanuvcell.repository.InvoicelessMobileRepository;
 import org.springframework.stereotype.Service;
@@ -23,15 +25,10 @@ public class InvoicelesssMobileService {
 
     public void createInvoicelessMobile(CreateInvoicelessMobileRequest request) {
 
-        DateTimeFormatter formatter
-                = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
         InvoicelessMobile invoicelessMobile = InvoicelessMobile.builder()
                 .tariffName(request.tariffName())
                 .internetQuota(request.internetQuota())
                 .tariffPrice(request.tariffPrice())
-                //.tariffStartDate(LocalDateTime.parse(request.tariffStartDate(), formatter))
-                //.tariffEndDate(LocalDateTime.parse(request.tariffEndDate()))
                 .role(request.role())
                 .speakingQuota(request.speakingQuota())
                 .messageQuota(request.messageQuota())
@@ -39,6 +36,24 @@ public class InvoicelesssMobileService {
                 .build();
 
         repository.save(invoicelessMobile);
+    }
+
+    public void createInvoicelessMobileList(List<CreateInvoicelessMobileRequest> requestList) {
+
+        for (CreateInvoicelessMobileRequest request:requestList){
+            InvoicelessMobile invoicelessMobile = InvoicelessMobile.builder()
+                    .tariffName(request.tariffName())
+                    .internetQuota(request.internetQuota())
+                    .tariffPrice(request.tariffPrice())
+                    .role(request.role())
+                    .speakingQuota(request.speakingQuota())
+                    .messageQuota(request.messageQuota())
+                    .tlQuota(request.tlQuota())
+                    .build();
+
+            repository.save(invoicelessMobile);
+        }
+
     }
 
     public List<InvoicelessMobileDto> findAllInvoicelessMobile() {

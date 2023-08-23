@@ -1,5 +1,6 @@
 package edu.sabanciuniv.nanuvcell.controller;
 
+import edu.sabanciuniv.nanuvcell.dto.CreateFiberRequest;
 import edu.sabanciuniv.nanuvcell.dto.CreateInvoicelessMobileRequest;
 import edu.sabanciuniv.nanuvcell.dto.InvoicelessMobileDto;
 import edu.sabanciuniv.nanuvcell.service.InvoicelesssMobileService;
@@ -27,6 +28,12 @@ public class InvoicelessMobileController {
     public ResponseEntity<String> createInvoicelessMobile(@RequestBody CreateInvoicelessMobileRequest request) {
         service.createInvoicelessMobile(request);
         return ResponseEntity.ok("Invoiceless Mobile created");
+    }
+
+    @PostMapping("/invoiceless-mobiles-list")
+    public ResponseEntity<String> createInvoicelessMobileList(@RequestBody List<CreateInvoicelessMobileRequest> requestList) {
+        service.createInvoicelessMobileList(requestList);
+        return ResponseEntity.ok("Invoiceless Mobile List created");
     }
 
     @GetMapping("/{id}")

@@ -40,6 +40,24 @@ public class AdslService {
         repository.save(adsl);
     }
 
+    public void createAdslList(List<CreateAdslRequest> requestList) {
+
+        for (CreateAdslRequest request:requestList){
+            Adsl adsl = Adsl.builder()
+                    .tariffName(request.tariffName())
+                    .internetSpeed(request.internetSpeed())
+                    .role(request.role())
+                    .internetQuota(request.internetQuota())
+                    .uploadSpeed(request.uploadSpeed())
+                    .downloadSpeed(request.downloadSpeed())
+                    .tariffPrice(request.tariffPrice())
+                    .build();
+
+            repository.save(adsl);
+        }
+
+    }
+
     public List<AdslDto> findAllAdsl() {
         return repository.findAll()
                 .stream()

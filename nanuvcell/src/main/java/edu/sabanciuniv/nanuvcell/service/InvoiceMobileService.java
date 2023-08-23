@@ -1,6 +1,7 @@
 package edu.sabanciuniv.nanuvcell.service;
 
 import edu.sabanciuniv.nanuvcell.dto.CreateInvoiceMobileRequest;
+import edu.sabanciuniv.nanuvcell.dto.CreateInvoicelessMobileRequest;
 import edu.sabanciuniv.nanuvcell.dto.InvoiceMobileDto;
 import edu.sabanciuniv.nanuvcell.exception.InvoiceMobileNotFoundException;
 import edu.sabanciuniv.nanuvcell.model.InvoiceMobile;
@@ -24,15 +25,10 @@ public class InvoiceMobileService {
 
     public void createInvoiceMobile(CreateInvoiceMobileRequest request) {
 
-        DateTimeFormatter formatter
-                = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
         InvoiceMobile invoiceMobile = InvoiceMobile.builder()
                 .tariffName(request.tariffName())
                 .internetQuota(request.internetQuota())
                 .tariffPrice(request.tariffPrice())
-                //.tariffStartDate(LocalDateTime.parse(request.tariffStartDate(), formatter))
-                //.tariffEndDate(LocalDateTime.parse(request.tariffEndDate(), formatter))
                 .role(request.role())
                 .speakingQuota(request.speakingQuota())
                 .messageQuota(request.messageQuota())
@@ -40,6 +36,24 @@ public class InvoiceMobileService {
                 .build();
 
         repository.save(invoiceMobile);
+    }
+
+    public void createInvoiceMobileList(List<CreateInvoiceMobileRequest> requestList) {
+
+        for (CreateInvoiceMobileRequest request:requestList){
+            InvoiceMobile invoiceMobile = InvoiceMobile.builder()
+                    .tariffName(request.tariffName())
+                    .internetQuota(request.internetQuota())
+                    .tariffPrice(request.tariffPrice())
+                    .role(request.role())
+                    .speakingQuota(request.speakingQuota())
+                    .messageQuota(request.messageQuota())
+                    .limitlessInternet(request.limitlessInternet())
+                    .build();
+
+            repository.save(invoiceMobile);
+        }
+
     }
 
     public List<InvoiceMobileDto> findAllInvoiceMobile() {

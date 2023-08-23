@@ -29,6 +29,12 @@ public class AdslController {
         return ResponseEntity.ok("ADSL created");
     }
 
+    @PostMapping("/adsl-list")
+    public ResponseEntity<String> createAdslList(@RequestBody List<CreateAdslRequest> requestList) {
+        service.createAdslList(requestList);
+        return ResponseEntity.ok("ADSL List created");
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<AdslDto> findAdslById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findAdslByGivenId(id));
