@@ -1,6 +1,7 @@
 package edu.sabanciuniv.nanuvcell.controller;
 
 import edu.sabanciuniv.nanuvcell.dto.*;
+import edu.sabanciuniv.nanuvcell.model.Invoice;
 import edu.sabanciuniv.nanuvcell.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +67,18 @@ public class UserController {
     public ResponseEntity<String> payHomeInternetInvoice(@RequestBody InvoicePaymentRequest request){
         service.payHomeInternetInvoice(request);
         return ResponseEntity.ok("Your home internet invoice paid successfully");
+    }
+
+    @GetMapping("/mobile-invoice/{id}")
+    public InvoiceDto viewMobileInvoiceByUserId(@PathVariable Long id){
+
+        return service.viewMobileInvoiceByUserId(id);
+    }
+
+    @GetMapping("/home-internet-invoice/{id}")
+    public InvoiceDto viewHomeInternetInvoiceByUserId(@PathVariable Long id){
+
+        return service.viewHomeInternetInvoiceByUserId(id);
     }
 
     /*@PostMapping("/home-internet/change-package")

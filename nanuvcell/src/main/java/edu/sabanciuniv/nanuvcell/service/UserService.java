@@ -385,4 +385,39 @@ public class UserService {
 
     }
 
+    public InvoiceDto viewMobileInvoiceByUserId(Long id) {
+        User user = findUserByGivenId(id);
+
+        List<Invoice> invoiceList = invoiceService.getInvoicesByUserId(user.getId());
+
+        Invoice mobileTariffInvoice = null;
+
+        for (Invoice invoice : invoiceList) {
+            if (invoice.getTariff() instanceof MobileTariff) {
+                mobileTariffInvoice = invoice;
+            }
+        }
+        return InvoiceDto.convert(mobileTariffInvoice);
+
+
+    }
+
+    public InvoiceDto viewHomeInternetInvoiceByUserId(Long id) {
+
+        User user = findUserByGivenId(id);
+
+        List<Invoice> invoiceList = invoiceService.getInvoicesByUserId(user.getId());
+
+        Invoice homeInternetInvoice = null;
+
+        for (Invoice invoice : invoiceList) {
+            if (invoice.getTariff() instanceof HomeInternet) {
+                homeInternetInvoice = invoice;
+            }
+        }
+        return InvoiceDto.convert(homeInternetInvoice);
+
+    }
+
+
 }
